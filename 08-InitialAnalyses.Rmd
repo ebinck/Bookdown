@@ -1,0 +1,175 @@
+# Initial Analyses
+
+```{include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(rgbif)
+library(ggthemes)
+```
+
+## Load the data
+
+### Wetland AIM data
+
+```{r}
+LPIcover2019_CO<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetlandAIM/LPIcover2019_CO.csv") %>% 
+  mutate(year = 2019)
+
+LPIcover2019_UT<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetlandAIM/LPIcover2019_UT.csv") %>% 
+  mutate(year = 2019)
+
+#these are all *absolute metrics*
+WetAIMIndicators2020<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetlandAIM/WetAIMIndicators2020.csv") %>% 
+  mutate(year = 2020) %>% 
+  rename(Plot.ID = PlotID)
+
+WetAIM.Relative.Cover2020<- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetlandAIM/ALL_RelativeCoverMetrics2020.csv") %>% 
+  mutate(year = 2020) %>% 
+  rename(Plot.ID = PlotID)
+
+#why are there two hydrophyte columns??
+hydrophytes<-WetAIMIndicators2020 %>% 
+  select(Plot.ID, CommunityLPIPctHydroFAC, HydroFACCover)
+
+```
+
+### Terrestrial AIM data 
+
+```{r}
+#load this info for later use
+header <- readRDS("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/AIM_tall_tables_export_2021-09-21/header.Rdata")
+StateSpecies<- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/ExportedTerrestrial_Data/tblStateSpecies.csv")
+RelativeCover<- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/RelativeCover.csv")
+lpi_CorrectCodes<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/lpi_tall_CorrectCodes.csv")
+
+#this is the table that contains elevation data for each transect
+tblLines <- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/ExportedTerrestrial_data/tblLines.csv")
+
+#load the final 25-50 hydrophytic data that matched the queries
+all25to50<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/Btwn25and50hydrophytic/all25to50.csv")
+
+over50<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/over50hydrophytic.csv") %>% 
+  select(PrimaryKey, PlotPercent)
+
+#Load all of the points with 25-50% (before running queries) to get the percent hydrophytic back to the all25to50 data
+between25to50hydrophytic<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/25to50hydrophytic.csv") %>% 
+  select(PrimaryKey, PlotPercent)
+
+#left join to get the percent hydrophytic on to all25to50
+all25to50<-all25to50 %>% 
+  left_join(between25to50hydrophytic) 
+
+#combine them to get a single dataset of "wetlands"
+
+Terr.Wetlands<-rbind(all25to50, over50) %>% 
+  mutate(source = "Terrestrial") %>% 
+  rename(HydroCover = PlotPercent) %>% 
+  rename(Plot.ID = PrimaryKey)
+```
+
+## Percent Hydrophytic 
+
+### Terrestrial "wetlands" sites with Wetland AIM sites
+
+```{r}
+#pull out the hydrophytic cover from the wetland AIM datasets 
+CO2019.hydroCover<-LPIcover2019_CO %>% 
+  select(Plot.ID, Relative.HydrophyteFAC.Cover) %>% 
+  rename(HydroFACCover = Relative.HydrophyteFAC.Cover)
+
+UT2019.hydroCover<-LPIcover2019_UT%>% 
+  select(Plot.ID, Relative.HydrophyteFAC.Cover) %>% 
+  rename(HydroFACCover = Relative.HydrophyteFAC.Cover)
+
+all2020.hydroCoverREL<-WetAIM.Relative.Cover2020 %>% 
+  select(Plot.ID, RelativeHydroFACCover) %>% 
+  rename(HydroFACCover = RelativeHydroFACCover) %>% 
+  mutate(HydroFACCover = HydroFACCover/100)
+
+#merge all of the Wetland data together
+WetAIMhydrophytic<-rbind(CO2019.hydroCover, UT2019.hydroCover, all2020.hydroCoverREL) %>% 
+  mutate(source = "Wetland") %>% 
+  rename(HydroCover = HydroFACCover) 
+
+#now combine all the data for simpler plotting
+all.sites<-rbind(Terr.Wetlands, WetAIMhydrophytic)
+
+ggplot()+
+  geom_boxplot(data = all.sites, aes(x = source, y = (HydroCover*100)))+
+  theme_bw()+
+  labs(x = "AIM Program", 
+       y = "Percent Hydrophytic Species", 
+       title = "Relative Hydrophytic Cover")+
+  theme(plot.title = element_text(size = 14, hjust = 0.5, face = "bold"))
+
+```
+### All Terrestrial sites with Wetland AIM sites
+
+```{r}
+#I think this only has sites that have FAC or wetter plants - go back to CalculatePercentCover.Rmd and change that somewhere...
+
+TerrRelCovHydro <- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/RelHydroCover.csv") %>% 
+  mutate(source = "Terrestrial") %>% 
+  rename(HydroCover = PlotPercent, Plot.ID = PrimaryKey)
+
+all.sites.allTerr<-rbind(TerrRelCovHydro, WetAIMhydrophytic)
+
+ggplot()+
+  geom_boxplot(data = all.sites.allTerr, aes(x = source, y = (HydroCover*100)))+
+  theme_bw()+
+  labs(x = "AIM Program", 
+       y = "Percent Hydrophytic Species", 
+       title = "Relative Hydrophytic Cover")+
+  theme(plot.title = element_text(size = 14, hjust = 0.5, face = "bold"))
+
+```
+
+## Percent Native/Noxious
+
+### Calculate Relative cover for Terrestrial wetlands
+
+Here I will need to attach states from Header, and if species are noxious from state species, assuming these are state specific.  I will also need to load in the lpi tall table info with all of the species in order to calculate the metrics.  
+
+```{r}
+#Attach states to the Terrestrial data 
+#first, extract the state for each plot
+states<-header %>% 
+  select(PrimaryKey, State)
+
+#then, add that info to the terrestrial wetlands
+Terr.Wetlands.state<-Terr.Wetlands %>% 
+  left_join(states, by = c("Plot.ID" = "PrimaryKey"))
+
+#next match up all the lpi data for those plots
+Terr.Wet.lpi<-Terr.Wetlands.state %>% 
+  inner_join(lpi_CorrectCodes, by = c("Plot.ID" = "PrimaryKey")) %>% 
+  select(Plot.ID, HydroCover, source.x, State, LineKey, layer,SpeciesCode, CorrectSpeciesCode2, PointNbr)
+
+#create an object with species codes, whether they are noxious or not, and the corresponding state for that info
+noxious.info<- StateSpecies %>% 
+  select(SpeciesCode, Noxious, SpeciesState) %>% 
+  distinct(.)
+
+unique(noxious.info$Noxious)
+
+#try to join the noxious info to the lpi data... hopefully this won't create duplicates?
+Terr.Wet.noxious<-Terr.Wet.lpi %>% 
+  left_join(noxious.info, by =c("SpeciesCode", "State" = "SpeciesState"))
+
+#Now calculate the number of noxious species and calculate relative percent cover
+Terr.Rel.Noxious<-Terr.Wet.noxious %>% 
+  group_by(Plot.ID, LineKey) %>% 
+  mutate(NumPlantHits = length(LineKey)) %>% 
+  mutate(Noxious = if_else(Noxious == "YES" | Noxious == "Yes", 1, 0, missing = 0)) %>% 
+  group_by(Plot.ID, LineKey) %>% 
+  summarise(NumNoxiousHits = sum(Noxious), NumPlantHits) %>% 
+  summarise(RelativeNoxCoverLine = NumNoxiousHits/NumPlantHits) %>% 
+  group_by(Plot.ID) %>% 
+  summarise(RelativeNoxCoverPlot = mean(RelativeNoxCoverLine)) %>% 
+  mutate(source = "Terrestrial")
+  
+```
+
+To be continued...

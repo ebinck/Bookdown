@@ -1,0 +1,168 @@
+# Calculate Percent Cover of Hydrophytic Species
+
+```{r include=FALSE}
+library(tidyverse)
+library(tidyr)
+library(sf)
+library(s2)
+library(mapview)
+
+mapviewOptions(fgb=F)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Data
+
+```{r }
+lpi_CorrectCodes<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/lpi_tall_CorrectCodes.csv") %>% 
+  select(LineKey,
+         RecKey,
+         FormType,
+         FormDate,
+         CheckboxLabel,
+         PrimaryKey,
+         PointLoc,
+         PointNbr,
+         layer,
+         SpeciesCode,
+         chckbox,
+         source,
+         SpeciesState,
+         Scientific.Name.with.Author,
+         CorrectSpeciesCode2)
+
+WetAIMmasterList<- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetIndicators/WetlandAIM_MasterSpeciesList.csv") %>% 
+  select(Symbol,
+         WMVC_WetStatus,
+         AW_WetStatus,
+         GP_WetStatus)
+
+Regions<-st_read("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/coe_regions/USACE_Regions_NAD83.shp")
+
+header <- readRDS("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/AIM_tall_tables_export_2021-09-21/header.Rdata")
+
+```
+
+## Remove Soil Surface Codes and non plant codes
+
+Remove all codes that are not vascular plants, so that I can calculate relative % cover
+
+```{r}
+lpi_CorrectCodesPlants <- lpi_CorrectCodes %>% 
+  rename("CorrectSpeciesCode" = "CorrectSpeciesCode2") %>% 
+  filter(layer != "SoilSurface",
+         !SpeciesCode %in% c("L", "WL", "VL", "WA", "S"))
+
+```
+
+
+## Calculate the percent relative cover of each species for each transect
+
+After checking for NAs in LineKey, it looks like every entry has a value for that column, so I will go with that.
+
+```{r}
+RelCover<-lpi_CorrectCodesPlants %>% 
+  group_by(PrimaryKey, LineKey) %>% 
+  mutate(NumPlantHits = length(LineKey)) %>% 
+  group_by(PrimaryKey, LineKey,CorrectSpeciesCode) %>% 
+  mutate(NumSpeciesHits = length(CorrectSpeciesCode)) %>% 
+  summarise(RelativeCover = NumSpeciesHits/NumPlantHits) %>% 
+  distinct(.)
+ 
+#I think this worked, though there was likely a much easier way to do it
+```
+
+## Apply Wetland Indicator Statuses
+
+```{r}
+RelCoverWetIndicators<-RelCover %>% 
+  left_join(WetAIMmasterList, by = c("CorrectSpeciesCode" = "Symbol"))
+```
+
+## Spatially apply the wetland indicator regions
+
+### Find the LRRs of every Primary Key 
+
+Use the lat long from the header files to match LRRs to each plot
+
+```{r}
+#create a spatial object from the LRR file
+st_crs(Regions)
+  
+mapview(Regions)
+
+#Create a spatial object using the coordinates from the header file
+SpatialInfo<-header %>% 
+  st_as_sf(., coords = c("Longitude_NAD83", "Latitude_NAD83"), crs = 4269) %>% 
+  select("PrimaryKey")
+
+#tell it to use s2 to get rid of the planar/projection issue
+sf_use_s2()
+
+#Join those two files
+WetRegions<-st_join(Regions, SpatialInfo, join = st_contains)
+
+#Convert the new file to a data frame to be merged with the lpi data
+WetRegions<-as.data.frame(WetRegions) %>% 
+  select(-geometry)
+
+```
+
+### Join the LRR data to the LPI data
+
+```{r}
+#Join the dfs and remove all the sites with Alaska LRRs to try to get rid of all Alaska sites
+RelCovWetIndicatorswLRR<- RelCoverWetIndicators %>% 
+  left_join(WetRegions)  %>% 
+  filter(Region != "USACE Alaska Region") %>% 
+  mutate(WetIndicator = case_when(
+    Region == "USACE Arid West Region" ~ AW_WetStatus,
+    Region == "USACE Western Mountains, Valleys, and Coast Region" ~ WMVC_WetStatus,
+    Region == "USACE Great Plains Region" ~ GP_WetStatus)) %>% 
+  select(-WMVC_WetStatus,
+         -AW_WetStatus,
+         -Region)
+
+#It seems like using s2 eliminated the issue of some Regions being NA
+```
+
+## Calculate the percent hydrophytic per plot
+
+```{r}
+
+RelCovHydro<- RelCovWetIndicatorswLRR %>% 
+  filter(WetIndicator == "FAC" | WetIndicator == "FACW" | WetIndicator == "OBL") %>% 
+  group_by(PrimaryKey,LineKey)  %>% 
+  summarise(TransectPercent = sum(RelativeCover)) %>% 
+  ungroup()
+
+RelCovHydroPlot<- RelCovHydro %>% 
+  group_by(PrimaryKey) %>% 
+  summarise(PlotPercent = mean(TransectPercent))
+
+#Plots that have over 50% hydrophytic
+over50 <- RelCovHydroPlot %>% 
+  filter(PlotPercent > 0.5)
+
+#Plots that have between 25 and 50% hydrophytic
+between25and50 <- RelCovHydroPlot %>% 
+  filter(PlotPercent > 0.25 & PlotPercent <= 0.5)
+
+```
+
+## Reattach the spatial info 
+
+### Reattach the lat long info sourced from header
+```{r}
+locationinfo<-header %>% 
+  select(PrimaryKey, Latitude_NAD83, Longitude_NAD83)
+
+over50 <- over50 %>% 
+  left_join(locationinfo)
+
+between25and50 <- between25and50 %>% 
+  left_join(locationinfo)
+
+rm(list=ls())
+```

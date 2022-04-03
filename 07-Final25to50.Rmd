@@ -1,0 +1,47 @@
+# Final sites between 25 and 50% hydrophytic plant species
+
+```{include=FALSE}
+knitr::opts_chunk$set
+
+library(dplyr)
+```
+
+## Load  the data
+
+Load all of the independent data sets and merge them together.
+
+```{r}
+over2<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/Btwn25and50hydrophytic/over2_SurfaceWater.csv") 
+
+w.in50m.rivers<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/Btwn25and50hydrophytic/w.in50m.rivers.csv") %>% 
+  select(PrimaryKey) %>% 
+  distinct(.) #for some reason there are some duplicates in these
+
+w.in50m.waterbodies<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/Btwn25and50hydrophytic/w.in50m.waterbodies.csv")%>% 
+  select(PrimaryKey) %>% 
+  distinct(.) #for some reason there are some duplicates in these
+
+between25and50_NWI<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/Btwn25and50hydrophytic/btwn25and50_NWI.csv") %>% 
+  select(PrimaryKey)
+
+btwn25and50_BpS<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/Btwn25and50hydrophytic/btwn25and50_BiophysicalRaster.csv") %>% 
+  select(PrimaryKey)
+  
+```
+
+## Combine the data
+
+Combined, if all are unique, there should be 171.  I wonder how many there will be when they are all combined?
+
+```{r}
+
+all25to50<-over2 %>% 
+  select(PrimaryKey) %>% 
+  full_join(w.in50m.rivers) %>% 
+  full_join(w.in50m.waterbodies) %>% 
+  full_join(between25and50_NWI) %>% 
+  full_join(btwn25and50_BpS)
+
+rm(list=ls())
+```
+This provides me with all of the Primary Keys from my queries.

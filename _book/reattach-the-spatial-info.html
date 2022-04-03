@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 11 Reattach the spatial info | Quantifying Sampled Wetlands on BLM Land</title>
+  <meta name="description" content="This is an organized chronicle of the coding I have used for my research thus far.." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 11 Reattach the spatial info | Quantifying Sampled Wetlands on BLM Land" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is an organized chronicle of the coding I have used for my research thus far.." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 11 Reattach the spatial info | Quantifying Sampled Wetlands on BLM Land" />
+  
+  <meta name="twitter:description" content="This is an organized chronicle of the coding I have used for my research thus far.." />
+  
+
+<meta name="author" content="Elin Binck" />
+
+
+<meta name="date" content="2022-04-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="calculate-the-percent-hydrophytic-per-plot.html"/>
+<link rel="next" href="surface-water.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.1.0/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.1.0/leaflet-providers-plugin.js"></script>
+<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+<script src="libs/HomeButton-0.0.1/home-button.js"></script>
+<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="remove-duplicates.html"><a href="remove-duplicates.html"><i class="fa fa-check"></i><b>2</b> Remove Duplicates</a><ul>
+<li class="chapter" data-level="2.1" data-path="remove-duplicates.html"><a href="remove-duplicates.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="remove-duplicates.html"><a href="remove-duplicates.html#join-lpi-with-corresponding-states"><i class="fa fa-check"></i><b>2.1.1</b> Join lpi with corresponding states</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="remove-duplicates.html"><a href="remove-duplicates.html#break-up-lpi_tall-to-investigate-duplicates"><i class="fa fa-check"></i><b>2.2</b> Break up lpi_tall to investigate duplicates</a></li>
+<li class="chapter" data-level="2.3" data-path="remove-duplicates.html"><a href="remove-duplicates.html#create-objects-for-duplicates-for-each-state"><i class="fa fa-check"></i><b>2.3</b> Create objects for duplicates for each state</a></li>
+<li class="chapter" data-level="2.4" data-path="remove-duplicates.html"><a href="remove-duplicates.html#remove-plots-with-duplicates"><i class="fa fa-check"></i><b>2.4</b> Remove plots with duplicates</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="remove-duplicates.html"><a href="remove-duplicates.html#create-a-df-with-all-the-primarykeys-from-each-dup-file-for-each-state"><i class="fa fa-check"></i><b>2.4.1</b> Create a df with all the PrimaryKeys from each dup file for each state</a></li>
+<li class="chapter" data-level="2.4.2" data-path="remove-duplicates.html"><a href="remove-duplicates.html#remove-all-plots-that-have-any-duplicate-values"><i class="fa fa-check"></i><b>2.4.2</b> Remove all plots that have any duplicate values</a></li>
+<li class="chapter" data-level="2.4.3" data-path="remove-duplicates.html"><a href="remove-duplicates.html#check-for-more-duplicates"><i class="fa fa-check"></i><b>2.4.3</b> Check for more duplicates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="correct-species-codes.html"><a href="correct-species-codes.html"><i class="fa fa-check"></i><b>3</b> Correct Species Codes</a><ul>
+<li class="chapter" data-level="3.1" data-path="correct-species-codes.html"><a href="correct-species-codes.html#load-the-rest-of-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the rest of the data</a></li>
+<li class="chapter" data-level="3.2" data-path="correct-species-codes.html"><a href="correct-species-codes.html#join-lpi_tall2-with-other-species-lists"><i class="fa fa-check"></i><b>3.2</b> Join lpi_tall2 with other species lists</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="correct-species-codes.html"><a href="correct-species-codes.html#join-with-usda-plant-list"><i class="fa fa-check"></i><b>3.2.1</b> Join with USDA plant list</a></li>
+<li class="chapter" data-level="3.2.2" data-path="correct-species-codes.html"><a href="correct-species-codes.html#join-with-statespecies"><i class="fa fa-check"></i><b>3.2.2</b> Join with StateSpecies</a></li>
+<li class="chapter" data-level="3.2.3" data-path="correct-species-codes.html"><a href="correct-species-codes.html#join-with-usda-list-again"><i class="fa fa-check"></i><b>3.2.3</b> Join with USDA list again</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="calculate-percent-cover-of-hydrophytic-species.html"><a href="calculate-percent-cover-of-hydrophytic-species.html"><i class="fa fa-check"></i><b>4</b> Calculate Percent Cover of Hydrophytic Species</a></li>
+<li class="chapter" data-level="5" data-path="load-data.html"><a href="load-data.html"><i class="fa fa-check"></i><b>5</b> Load Data</a></li>
+<li class="chapter" data-level="6" data-path="remove-soil-surface-codes-and-non-plant-codes.html"><a href="remove-soil-surface-codes-and-non-plant-codes.html"><i class="fa fa-check"></i><b>6</b> Remove Soil Surface Codes and non plant codes</a></li>
+<li class="chapter" data-level="7" data-path="calculate-the-percent-relative-cover-of-each-species-for-each-transect.html"><a href="calculate-the-percent-relative-cover-of-each-species-for-each-transect.html"><i class="fa fa-check"></i><b>7</b> Calculate the percent relative cover of each species for each transect</a></li>
+<li class="chapter" data-level="8" data-path="apply-wetland-indicator-statuses.html"><a href="apply-wetland-indicator-statuses.html"><i class="fa fa-check"></i><b>8</b> Apply Wetland Indicator Statuses</a></li>
+<li class="chapter" data-level="9" data-path="spatially-apply-the-wetland-indicator-regions.html"><a href="spatially-apply-the-wetland-indicator-regions.html"><i class="fa fa-check"></i><b>9</b> Spatially apply the wetland indicator regions</a><ul>
+<li class="chapter" data-level="9.1" data-path="spatially-apply-the-wetland-indicator-regions.html"><a href="spatially-apply-the-wetland-indicator-regions.html#find-the-lrrs-of-every-primary-key"><i class="fa fa-check"></i><b>9.1</b> Find the LRRs of every Primary Key</a></li>
+<li class="chapter" data-level="9.2" data-path="spatially-apply-the-wetland-indicator-regions.html"><a href="spatially-apply-the-wetland-indicator-regions.html#join-the-lrr-data-to-the-lpi-data"><i class="fa fa-check"></i><b>9.2</b> Join the LRR data to the LPI data</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="calculate-the-percent-hydrophytic-per-plot.html"><a href="calculate-the-percent-hydrophytic-per-plot.html"><i class="fa fa-check"></i><b>10</b> Calculate the percent hydrophytic per plot</a></li>
+<li class="chapter" data-level="11" data-path="reattach-the-spatial-info.html"><a href="reattach-the-spatial-info.html"><i class="fa fa-check"></i><b>11</b> Reattach the spatial info</a><ul>
+<li class="chapter" data-level="11.1" data-path="reattach-the-spatial-info.html"><a href="reattach-the-spatial-info.html#reattach-the-lat-long-info-sourced-from-header"><i class="fa fa-check"></i><b>11.1</b> Reattach the lat long info sourced from header</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="surface-water.html"><a href="surface-water.html"><i class="fa fa-check"></i><b>12</b> Surface Water</a><ul>
+<li class="chapter" data-level="12.1" data-path="surface-water.html"><a href="surface-water.html#load-the-lpi-data"><i class="fa fa-check"></i><b>12.1</b> Load the LPI data</a></li>
+<li class="chapter" data-level="12.2" data-path="surface-water.html"><a href="surface-water.html#calculate-percent-surface-water"><i class="fa fa-check"></i><b>12.2</b> Calculate percent surface water</a></li>
+<li class="chapter" data-level="12.3" data-path="surface-water.html"><a href="surface-water.html#join-this-data-with-the-data-of-25-to-50-hydrophytic-species"><i class="fa fa-check"></i><b>12.3</b> Join this data with the data of 25 to 50% hydrophytic species</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="final-sites-between-25-and-50-hydrophytic-plant-species.html"><a href="final-sites-between-25-and-50-hydrophytic-plant-species.html"><i class="fa fa-check"></i><b>13</b> Final sites between 25 and 50% hydrophytic plant species</a><ul>
+<li class="chapter" data-level="13.1" data-path="final-sites-between-25-and-50-hydrophytic-plant-species.html"><a href="final-sites-between-25-and-50-hydrophytic-plant-species.html#load-the-data-1"><i class="fa fa-check"></i><b>13.1</b> Load the data</a></li>
+<li class="chapter" data-level="13.2" data-path="final-sites-between-25-and-50-hydrophytic-plant-species.html"><a href="final-sites-between-25-and-50-hydrophytic-plant-species.html#combine-the-data"><i class="fa fa-check"></i><b>13.2</b> Combine the data</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="initial-analyses.html"><a href="initial-analyses.html"><i class="fa fa-check"></i><b>14</b> Initial Analyses</a><ul>
+<li class="chapter" data-level="14.1" data-path="initial-analyses.html"><a href="initial-analyses.html#load-the-data-2"><i class="fa fa-check"></i><b>14.1</b> Load the data</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="initial-analyses.html"><a href="initial-analyses.html#wetland-aim-data"><i class="fa fa-check"></i><b>14.1.1</b> Wetland AIM data</a></li>
+<li class="chapter" data-level="14.1.2" data-path="initial-analyses.html"><a href="initial-analyses.html#terrestrial-aim-data"><i class="fa fa-check"></i><b>14.1.2</b> Terrestrial AIM data</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="initial-analyses.html"><a href="initial-analyses.html#percent-hydrophytic"><i class="fa fa-check"></i><b>14.2</b> Percent Hydrophytic</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="initial-analyses.html"><a href="initial-analyses.html#terrestrial-wetlands-sites-with-wetland-aim-sites"><i class="fa fa-check"></i><b>14.2.1</b> Terrestrial “wetlands” sites with Wetland AIM sites</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="initial-analyses.html"><a href="initial-analyses.html#percent-nativenoxious"><i class="fa fa-check"></i><b>14.3</b> Percent Native/Noxious</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="initial-analyses.html"><a href="initial-analyses.html#calculate-relative-cover-for-terrestrial-wetlands"><i class="fa fa-check"></i><b>14.3.1</b> Calculate Relative cover for Terrestrial wetlands</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Quantifying Sampled Wetlands on BLM Land</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="reattach-the-spatial-info" class="section level1">
+<h1><span class="header-section-number">Chapter 11</span> Reattach the spatial info</h1>
+<div id="reattach-the-lat-long-info-sourced-from-header" class="section level2">
+<h2><span class="header-section-number">11.1</span> Reattach the lat long info sourced from header</h2>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="reattach-the-spatial-info.html#cb50-1"></a>locationinfo&lt;-header <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-2"><a href="reattach-the-spatial-info.html#cb50-2"></a><span class="st">  </span><span class="kw">select</span>(PrimaryKey, Latitude_NAD83, Longitude_NAD83)</span>
+<span id="cb50-3"><a href="reattach-the-spatial-info.html#cb50-3"></a></span>
+<span id="cb50-4"><a href="reattach-the-spatial-info.html#cb50-4"></a>over50 &lt;-<span class="st"> </span>over50 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-5"><a href="reattach-the-spatial-info.html#cb50-5"></a><span class="st">  </span><span class="kw">left_join</span>(locationinfo)</span></code></pre></div>
+<pre><code>## Joining, by = &quot;PrimaryKey&quot;</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="reattach-the-spatial-info.html#cb52-1"></a>between25and50 &lt;-<span class="st"> </span>between25and50 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb52-2"><a href="reattach-the-spatial-info.html#cb52-2"></a><span class="st">  </span><span class="kw">left_join</span>(locationinfo)</span></code></pre></div>
+<pre><code>## Joining, by = &quot;PrimaryKey&quot;</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="reattach-the-spatial-info.html#cb54-1"></a><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="calculate-the-percent-hydrophytic-per-plot.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="surface-water.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/04-CalculatePercentCover.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

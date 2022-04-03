@@ -1,0 +1,602 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{book}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Quantifying Sampled Wetlands on BLM Land},
+  pdfauthor={Elin Binck},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+
+\title{Quantifying Sampled Wetlands on BLM Land}
+\author{Elin Binck}
+\date{2022-03-25}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{introduction}{%
+\chapter{Introduction}\label{introduction}}
+
+This is a compilation of the code I have written thus far for my master's research, quantifying wetlands that have been sampled with BLM's Terrestrial Assessment, Inventory, and Monitoring (AIM) program. While the Terrestrial program aims to sample upland ecosystems, over 40,000 sites have been sampled, meaning even with minimal error, there are likely hundreds of sites that qualify as wetlands. In this bookdown, I use a number of criteria to identify ``wetland'' sites in the Terrestrial AIM database.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bookdown}\OperatorTok{::}\KeywordTok{render_book}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bookdown}\OperatorTok{::}\KeywordTok{serve_book}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{hello-bookdown}{%
+\chapter{Hello bookdown}\label{hello-bookdown}}
+
+All chapters start with a first-level heading followed by your chapter title, like the line above. There should be only one first-level heading (\texttt{\#}) per .Rmd file.
+
+\hypertarget{a-section}{%
+\section{A section}\label{a-section}}
+
+All chapter sections start with a second-level (\texttt{\#\#}) or higher heading followed by your section title, like the sections above and below here. You can have as many as you want within a chapter.
+
+\hypertarget{an-unnumbered-section}{%
+\subsection*{An unnumbered section}\label{an-unnumbered-section}}
+\addcontentsline{toc}{subsection}{An unnumbered section}
+
+Chapters and sections are numbered by default. To un-number a heading, add a \texttt{\{.unnumbered\}} or the shorter \texttt{\{-\}} at the end of the heading, like in this section.
+
+\hypertarget{remove-duplicates}{%
+\chapter{Remove Duplicates}\label{remove-duplicates}}
+
+I was provided all of the AIM data by the BLM in a tall table for easy analysis. However, after beginning to work with the data, I realized there were a number of duplicate records for some reason. As a result, my first step was to remove data from all sites that had any duplicate records. Even if there was one duplicate reading in a site, the reasons seemed to be variable, and I determined it was more efficient to remove all of the data for those sites than to try to fix the issue. Additionally, I decided it was better to omit the data than try to alter it in a way that may not be accurate in relation to on the ground field conditions.
+
+\hypertarget{load-the-data}{%
+\section{Load the data}\label{load-the-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lpi_tall<-}\KeywordTok{readRDS}\NormalTok{(}\StringTok{"/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/AIM_tall_tables_export_2021-09-21/lpi_tall.Rdata"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{rename}\NormalTok{(}\DataTypeTok{SpeciesCode =}\NormalTok{ code)}
+
+\NormalTok{header <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/AIM_tall_tables_export_2021-09-21/header.Rdata"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{join-lpi-with-corresponding-states}{%
+\subsection{Join lpi with corresponding states}\label{join-lpi-with-corresponding-states}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{PrimKeyState <-}\StringTok{ }\NormalTok{header[,}\KeywordTok{c}\NormalTok{(}\StringTok{"PrimaryKey"}\NormalTok{, }\StringTok{"State"}\NormalTok{)]}
+
+\NormalTok{lpi_tall2<-lpi_tall }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(PrimKeyState) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{rename}\NormalTok{(}\DataTypeTok{SpeciesState =}\NormalTok{ State) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{STATE, }\OperatorTok{-}\NormalTok{SAGEBRUSH_SPP)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Joining, by = "PrimaryKey"
+\end{verbatim}
+
+\hypertarget{break-up-lpi_tall-to-investigate-duplicates}{%
+\section{Break up lpi\_tall to investigate duplicates}\label{break-up-lpi_tall-to-investigate-duplicates}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#write a function to calculate the number of unique vs total rows for a given state}
+\NormalTok{state_dups<-}\ControlFlowTok{function}\NormalTok{(state) \{}
+\NormalTok{  dups<-lpi_tall2}\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{filter}\NormalTok{(SpeciesState }\OperatorTok{==}\StringTok{ }\NormalTok{state)}
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{n_distinct}\NormalTok{(dups))}
+  \KeywordTok{print}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(dups))}
+\NormalTok{\}}
+
+\NormalTok{states<-}\KeywordTok{unique}\NormalTok{(lpi_tall2}\OperatorTok{$}\NormalTok{SpeciesState)}
+\NormalTok{states_list<-}\KeywordTok{setNames}\NormalTok{(}\KeywordTok{vector}\NormalTok{(}\StringTok{"list"}\NormalTok{, }\KeywordTok{length}\NormalTok{(states)), states)}
+
+\CommentTok{#use a for loop to quickly calculate them for each state}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \KeywordTok{seq_along}\NormalTok{(states))\{}
+\NormalTok{  N<-}\KeywordTok{state_dups}\NormalTok{(states[i])}
+  \KeywordTok{print}\NormalTok{(states[i])}
+  \KeywordTok{print}\NormalTok{(N)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2329459
+## [1] 2329459
+## [1] "NV"
+## [1] 2329459
+## [1] 1291815
+## [1] 1291856
+## [1] "CO"
+## [1] 1291856
+## [1] 84073
+## [1] 84073
+## [1] "AK"
+## [1] 84073
+## [1] 220373
+## [1] 220373
+## [1] "AZ"
+## [1] 220373
+## [1] 622846
+## [1] 622846
+## [1] "CA"
+## [1] 622846
+## [1] 82541
+## [1] 82546
+## [1] "SD"
+## [1] 82546
+## [1] 1035623
+## [1] 1035628
+## [1] "ID"
+## [1] 1035628
+## [1] 1187917
+## [1] 1187917
+## [1] "WY"
+## [1] 1187917
+## [1] 10844
+## [1] 10844
+## [1] "ND"
+## [1] 10844
+## [1] 984421
+## [1] 984421
+## [1] "UT"
+## [1] 984421
+## [1] 804749
+## [1] 807959
+## [1] "MT"
+## [1] 807959
+## [1] 1427307
+## [1] 1427307
+## [1] "OR"
+## [1] 1427307
+## [1] 361284
+## [1] 361284
+## [1] "WA"
+## [1] 361284
+## [1] 0
+## [1] 0
+## [1] NA
+## [1] 0
+## [1] 785171
+## [1] 785171
+## [1] "NM"
+## [1] 785171
+\end{verbatim}
+
+\hypertarget{create-objects-for-duplicates-for-each-state}{%
+\section{Create objects for duplicates for each state}\label{create-objects-for-duplicates-for-each-state}}
+
+\hypertarget{south-dakota}{%
+\subsubsection{South Dakota}\label{south-dakota}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SDrows<-lpi_tall2}\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{filter}\NormalTok{(SpeciesState }\OperatorTok{==}\StringTok{ "SD"}\NormalTok{)}
+
+\NormalTok{SDdups<-}\StringTok{ }\NormalTok{SDrows[}\KeywordTok{duplicated}\NormalTok{(SDrows),]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{montana}{%
+\subsubsection{Montana}\label{montana}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{MTrows<-lpi_tall2}\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{filter}\NormalTok{(SpeciesState }\OperatorTok{==}\StringTok{ "MT"}\NormalTok{)}
+
+\NormalTok{MTdups<-}\StringTok{ }\NormalTok{MTrows[}\KeywordTok{duplicated}\NormalTok{(MTrows),]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{colorado}{%
+\subsubsection{Colorado}\label{colorado}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{COrows<-lpi_tall2}\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{filter}\NormalTok{(SpeciesState }\OperatorTok{==}\StringTok{ "CO"}\NormalTok{)}
+
+\NormalTok{COdups<-}\StringTok{ }\NormalTok{COrows[}\KeywordTok{duplicated}\NormalTok{(COrows),]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{idaho}{%
+\subsubsection{Idaho}\label{idaho}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{IDrows<-lpi_tall2}\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{filter}\NormalTok{(SpeciesState }\OperatorTok{==}\StringTok{ "ID"}\NormalTok{)}
+
+\NormalTok{IDdups<-}\StringTok{ }\NormalTok{IDrows[}\KeywordTok{duplicated}\NormalTok{(IDrows),]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{remove-plots-with-duplicates}{%
+\section{Remove plots with duplicates}\label{remove-plots-with-duplicates}}
+
+\hypertarget{create-a-df-with-all-the-primarykeys-from-each-dup-file-for-each-state}{%
+\subsection{Create a df with all the PrimaryKeys from each dup file for each state}\label{create-a-df-with-all-the-primarykeys-from-each-dup-file-for-each-state}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{uniqueSDdups<-SDdups }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{distinct}\NormalTok{(PrimaryKey)}
+
+\NormalTok{uniqueMTdups<-MTdups }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{distinct}\NormalTok{(PrimaryKey)}
+
+\NormalTok{uniqueCOdups<-COdups }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{distinct}\NormalTok{(PrimaryKey)}
+
+\NormalTok{uniqueIDdups<-IDdups }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{distinct}\NormalTok{(PrimaryKey)}
+
+\NormalTok{dupPrimaryKeys<-}\KeywordTok{rbind}\NormalTok{(uniqueSDdups, uniqueMTdups, uniqueCOdups, uniqueIDdups)}
+
+\NormalTok{dupPrimaryKeys<-}\KeywordTok{as.vector}\NormalTok{(dupPrimaryKeys}\OperatorTok{$}\NormalTok{PrimaryKey)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{remove-all-plots-that-have-any-duplicate-values}{%
+\subsection{Remove all plots that have any duplicate values}\label{remove-all-plots-that-have-any-duplicate-values}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \KeywordTok{seq_along}\NormalTok{(dupPrimaryKeys))\{}
+\NormalTok{  lpi_tall2<-lpi_tall2 }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{filter}\NormalTok{(PrimaryKey }\OperatorTok{!=}\NormalTok{dupPrimaryKeys[i])}
+\NormalTok{\}}
+
+\CommentTok{#confirm that that worked and removed all entries with those PrimaryKeys}
+\CommentTok{#also check to see how many plots were removed - it looks like less than 100 which is good}
+
+\KeywordTok{n_distinct}\NormalTok{(lpi_tall}\OperatorTok{$}\NormalTok{PrimaryKey)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 36314
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{n_distinct}\NormalTok{(lpi_tall2}\OperatorTok{$}\NormalTok{PrimaryKey)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 36232
+\end{verbatim}
+
+\hypertarget{check-for-more-duplicates}{%
+\subsection{Check for more duplicates}\label{check-for-more-duplicates}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#No more duplicates exist!}
+\KeywordTok{n_distinct}\NormalTok{(lpi_tall2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 11229988
+\end{verbatim}
+
+\hypertarget{correct-species-codes}{%
+\chapter{Correct Species Codes}\label{correct-species-codes}}
+
+\begin{verbatim}
+library(tidyverse)
+library(tidyr)
+library(readr)
+
+knitr::opts_chunk$set(echo = TRUE)
+\end{verbatim}
+
+\hypertarget{load-the-rest-of-the-data}{%
+\section{Load the rest of the data}\label{load-the-rest-of-the-data}}
+
+\hypertarget{lpi-data-dups-removed}{%
+\subsubsection{LPI data (dups removed)}\label{lpi-data-dups-removed}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lpi_tall2<-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/lpi_tall.DupsRemoved.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{state-species-list}{%
+\subsubsection{State Species List}\label{state-species-list}}
+
+This is the data that has the ``correct'' codes to replace incorrect ones.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{StateSpecies<-}\KeywordTok{read.csv}\NormalTok{(}\StringTok{"/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/ExportedTerrestrial_Data/tblStateSpecies.csv"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(SpeciesCode, }
+\NormalTok{         ScientificName, }
+\NormalTok{         UpdatedSpeciesCode, }
+\NormalTok{         SpeciesState)}
+
+\CommentTok{#change some of the incorrectly formatted data}
+
+\NormalTok{StateSpecies[}\StringTok{"SpeciesCode"}\NormalTok{][StateSpecies[}\StringTok{"SpeciesCode"}\NormalTok{] }\OperatorTok{==}\StringTok{ "7-Feb"}\NormalTok{] <-}\StringTok{ "FEBR7"}
+
+\NormalTok{StateSpecies[}\StringTok{"SpeciesCode"}\NormalTok{][StateSpecies[}\StringTok{"SpeciesCode"}\NormalTok{] }\OperatorTok{==}\StringTok{ "2-Feb"}\NormalTok{] <-}\StringTok{ "FEBR2"}
+
+\NormalTok{StateSpecies[}\StringTok{"SpeciesCode"}\NormalTok{][StateSpecies[}\StringTok{"SpeciesCode"}\NormalTok{] }\OperatorTok{==}\StringTok{ "2-Mar"}\NormalTok{] <-}\StringTok{ "MARCH2"}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{wetland-aim-master-species-list}{%
+\subsubsection{Wetland AIM Master Species List}\label{wetland-aim-master-species-list}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WetAIMmasterlist <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetIndicators/WetlandAIM_MasterSpeciesList.csv"}\NormalTok{)}\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(Symbol, }
+\NormalTok{         WMVC_WetStatus, }
+\NormalTok{         AW_WetStatus, }
+\NormalTok{         GP_WetStatus, }
+\NormalTok{         Scientific.Name)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{usda-plant-list}{%
+\subsubsection{USDA plant list}\label{usda-plant-list}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{USDAlist <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetIndicators/NationalPlantList.csv"}\NormalTok{)}
+
+\NormalTok{USDAlist[}\StringTok{"Symbol"}\NormalTok{][USDAlist[}\StringTok{"Symbol"}\NormalTok{] }\OperatorTok{==}\StringTok{ "7-Feb"}\NormalTok{] <-}\StringTok{ "FEBR7"}
+
+\NormalTok{USDAlist[}\StringTok{"Symbol"}\NormalTok{][USDAlist[}\StringTok{"Symbol"}\NormalTok{] }\OperatorTok{==}\StringTok{ "5-Feb"}\NormalTok{] <-}\StringTok{ "FEBR5"}
+
+\NormalTok{USDAlist[}\StringTok{"Symbol"}\NormalTok{][USDAlist[}\StringTok{"Symbol"}\NormalTok{] }\OperatorTok{==}\StringTok{ "2-Feb"}\NormalTok{] <-}\StringTok{ "FEBR2"}
+
+\NormalTok{USDAlist[}\StringTok{"Symbol"}\NormalTok{][USDAlist[}\StringTok{"Symbol"}\NormalTok{] }\OperatorTok{==}\StringTok{ "2-Mar"}\NormalTok{] <-}\StringTok{ "MARCH2"}
+
+\NormalTok{USDAlist[}\StringTok{"Symbol"}\NormalTok{][USDAlist[}\StringTok{"Symbol"}\NormalTok{] }\OperatorTok{==}\StringTok{ "Dec-70"}\NormalTok{] <-}\StringTok{ "DECE70"}
+
+\NormalTok{USDAlist[}\StringTok{"Symbol"}\NormalTok{][USDAlist[}\StringTok{"Symbol"}\NormalTok{] }\OperatorTok{==}\StringTok{ "5-Jun"}\NormalTok{] <-}\StringTok{ "JUNE5"}
+
+\NormalTok{USDAlist[}\StringTok{"Symbol"}\NormalTok{][USDAlist[}\StringTok{"Symbol"}\NormalTok{] }\OperatorTok{==}\StringTok{ "2-Nov"}\NormalTok{] <-}\StringTok{ "NOVE2"}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{join-lpi_tall2-with-other-species-lists}{%
+\section{Join lpi\_tall2 with other species lists}\label{join-lpi_tall2-with-other-species-lists}}
+
+\hypertarget{join-with-usda-plant-list}{%
+\subsection{Join with USDA plant list}\label{join-with-usda-plant-list}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#First, create a new column with EITHER the Symbol or the Synonym to prevent duplication when joining }
+
+\NormalTok{USDAlist_oneCode<-}\StringTok{ }\NormalTok{USDAlist }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{SpeciesCode =} 
+           \KeywordTok{if_else}\NormalTok{(Synonym.Symbol }\OperatorTok{==}\StringTok{ ""}\NormalTok{,Symbol, Synonym.Symbol)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{Synonym.Symbol)}
+
+\NormalTok{lpi_USDA <-}\StringTok{ }\NormalTok{lpi_tall2 }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(USDAlist_oneCode, }\DataTypeTok{by =} \StringTok{"SpeciesCode"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{join-with-statespecies}{%
+\subsection{Join with StateSpecies}\label{join-with-statespecies}}
+
+\hypertarget{prep-statespecies-to-join}{%
+\subsubsection{Prep StateSpecies to join}\label{prep-statespecies-to-join}}
+
+Here I need to remove all duplicate combinations of state and species code. To do so, I used anti join to find all of the records that are redundant because they match up with codes from the USDA list. This also conveniently removed all duplicates, so when I join with the lpi data, this should give me a species name and possibly an ``updated code'' for any listings that did not already match with the USDA list.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Investigate how many of the codes from the StateSpecies list show up in the USDA list w/ synonyms, and how many don't}
+
+\NormalTok{USDA_StateSpecies <-}\StringTok{ }\NormalTok{USDAlist_oneCode }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{inner_join}\NormalTok{(StateSpecies, }\DataTypeTok{by =} \StringTok{"SpeciesCode"}\NormalTok{)}
+
+\CommentTok{#there are only 2,500ish records that don't match.  Let's look at those:}
+
+\NormalTok{antiUSDA_StateSpecies <-StateSpecies }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{anti_join}\NormalTok{(USDAlist_oneCode, }\DataTypeTok{by =} \StringTok{"SpeciesCode"}\NormalTok{)}
+
+\CommentTok{#It looks like there are no duplicates anymore also!  So now I will join this to the lpi data:}
+
+\KeywordTok{unique}\NormalTok{(antiUSDA_StateSpecies}\OperatorTok{$}\NormalTok{UpdatedSpeciesCode)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] ""        "JUALN"   "SASP91"  "SPHAG2"  "ASROM"   "2FUNGI"  "CAMI10" 
+##  [8] "CEIS60"  "CILA70"  "CLST7"   "DRINC"   "HUPER"   "OROBA"   "PLAL8"  
+## [15] "SPCO70"  "TEMN70"  "AMMEI2"  "GALIU"   "RIMO2"   "ACTH7"   "LILE3"  
+## [22] "<Null>"  "VEWO2"   "RIBES"   "MAGR2"   "SATR12"  "ANPA4"   "ORST2"  
+## [29] "SACA52"  "FRAL2"   "ALTE"    "THAR5"   "COLI2"   "HECO26"  "ALPR3"  
+## [36] "JUHO2"   "CRPO5"   "BOER4"   "SALIX"   "SCLER10" "SEDUM"   "ERIGE2" 
+## [43] "GIIN2"   "HEPA11"  "PUTR2"   "RUMEX"   "EUPHO"   "PENST"   "POLYG4" 
+## [50] "ARFR4"   "ARTRW8"  "ANST2"   "ARTRT"   "NOCU"    "AMAL2"   "ACMI2"  
+## [57] "AGGL"    "ALLIU"   "AMBRO"   "ANTEN"   "ARABI2"  "CRAC2"   "DRABA"  
+## [64] "SPORO"   "TAOF"    "TRDU"    "TRIFO"
+\end{verbatim}
+
+\hypertarget{join-the-data}{%
+\subsubsection{Join the data}\label{join-the-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Join the lpi data that was joined with the USDA codes with the state species codes that are not redundant with the usda list.  This automatically joins by SpeciesCode and SpeciesState}
+\CommentTok{#so, this should produce the same number of records as lpi_tall2/lpi_USDA  - and it does!}
+\CommentTok{#Add the column with the "correct code," so basically any codes that differ between the UpdatedSpeciesCode and SpeciesCode will be replaced with the UpdatedSpeciesCode value.}
+
+\NormalTok{lpi_USDA_StateSpecies<-lpi_USDA }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(antiUSDA_StateSpecies) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{CorrectSpeciesCode =}
+           \KeywordTok{if_else}\NormalTok{(UpdatedSpeciesCode }\OperatorTok{==}\StringTok{ ""}\NormalTok{, SpeciesCode, UpdatedSpeciesCode, }\DataTypeTok{missing =}\NormalTok{ SpeciesCode))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Joining, by = c("SpeciesCode", "SpeciesState")
+\end{verbatim}
+
+\hypertarget{join-with-usda-list-again}{%
+\subsection{Join with USDA list again}\label{join-with-usda-list-again}}
+
+This time I will be joining by scientific name, to try to catch any records where codes were just not right for some reason, but scientific names were.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#I shouldn't need to do this with USDAlist_oneCode, since the Wetland AIM master list matched up 100% with the main symbol column, so that should be sufficient to get me what I want in terms of final match with the WetAIM master list. }
+
+\NormalTok{USDAlist2<-}\StringTok{ }\NormalTok{USDAlist }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{rename}\NormalTok{(}\StringTok{"Symbol2"}\NormalTok{ =}\StringTok{ "Symbol"}\NormalTok{,}
+         \StringTok{"Sci.Name"}\NormalTok{=}\StringTok{"Scientific.Name.with.Author"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\StringTok{"Common.Name"}\NormalTok{, }
+         \OperatorTok{-}\StringTok{ "Family"}\NormalTok{, }
+         \OperatorTok{-}\StringTok{ "Synonym.Symbol"}\NormalTok{)}
+
+
+\CommentTok{#Now, join the USDA list again, joining with its scientific name column (Sci.Name) to the ScientificName column that was attached from the StateSpecies list}
+
+\NormalTok{lpi_USDA2_StateSpecies<-}\StringTok{ }\NormalTok{lpi_USDA_StateSpecies }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(USDAlist2, }\DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"ScientificName"}\NormalTok{ =}\StringTok{ "Sci.Name"}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{CorrectSpeciesCode2 =} 
+           \KeywordTok{if_else}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(Symbol2), Symbol2, CorrectSpeciesCode)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{Symbol2, }
+         \OperatorTok{-}\NormalTok{Symbol,}
+         \OperatorTok{-}\NormalTok{CorrectSpeciesCode,}
+         \OperatorTok{-}\NormalTok{UpdatedSpeciesCode,}
+         \OperatorTok{-}\NormalTok{ScientificName)}
+  
+\CommentTok{#No duplicates, which is a great sign!  }
+
+\CommentTok{#this adds a correct symbol column (Symbol2) directly from the USDA list that should match up to the Wetland Master list.  This actually looks like it just replaces unkown codes that were assigned a family with just the family code, so I probably didnt need to do this.  But, I don't think it hurts to have done it. }
+\end{Highlighting}
+\end{Shaded}
+
+  \bibliography{book.bib,packages.bib}
+
+\end{document}

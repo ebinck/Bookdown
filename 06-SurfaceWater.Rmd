@@ -1,0 +1,56 @@
+# Surface Water
+
+```{include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+## Load the LPI data
+```{r}
+header <- readRDS("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/AIM_tall_tables_export_2021-09-21/header.Rdata") %>% 
+  select(PrimaryKey, State)
+
+lpi_tall<-readRDS("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/AIM_tall_tables_export_2021-09-21/lpi_tall.Rdata") %>% 
+  select(LineKey, PrimaryKey, PointLoc, PointNbr, layer, code) %>% 
+  left_join(header) %>% #attach state from header so you can remove alaska data
+  filter(State != "AK")
+
+```
+## Calculate percent surface water
+
+```{r}
+
+SurfaceWater<-lpi_tall %>%
+  group_by(PrimaryKey, LineKey) %>% 
+  mutate(NumLPIHits = n_distinct(PointNbr)) %>% 
+  mutate(WaterHits = if_else(code %in% c("W", "WA"), 1, 0)) %>% 
+  group_by(PrimaryKey, LineKey) %>% 
+  mutate(NumWaterHits = sum(WaterHits)) %>% 
+  summarise(PercentWaterTransect = NumWaterHits/NumLPIHits) %>% 
+  distinct(.) %>%  
+  group_by(PrimaryKey) %>% 
+  summarise(PercentWaterPlot = mean(PercentWaterTransect)) %>% 
+  filter(PercentWaterPlot != 0)
+
+over2<-SurfaceWater %>% 
+  filter(PercentWaterPlot>0.02)
+
+over1<-SurfaceWater %>% 
+  filter(PercentWaterPlot>0.01)
+```
+I double checked a handful of the percentages and they look good! Ready to move on.
+
+## Join this data with the data of 25 to 50% hydrophytic species
+
+Since I used the original data to do this, I need to now make sure all of those sites also have 25-50% hydrophytic species.  Having skipped ahead (oops), it seems that there are definiteley a number that do not have 25-50%.  Do I want to throw out the plots that have less than that?  OH! Or, is there a chance some of them have greater than 50%?  I think I want to start out by just looking at the percentages to see what I am working with, so I will first join with all of the hydrophytic data somehow..
+
+```{r}
+RelHydroCover<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/RelHydroCover.csv")
+
+over2hydroCover<-over2 %>% 
+  left_join(RelHydroCover)
+
+rm(list=ls())
+```
+

@@ -1,0 +1,33 @@
+--- 
+title: "Quantifying Sampled Wetlands on BLM Land"
+author: "Elin Binck"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+# url: your book url like https://bookdown.org/yihui/bookdown
+# cover-image: path to the social sharing image like images/cover.jpg
+description: |
+  This is an organized chronicle of the coding I have used for my research thus far..
+link-citations: yes
+---
+
+# Introduction
+
+This is a compilation of the code I have written thus far for my master's research, quantifying wetlands that have been sampled with BLM's Terrestrial Assessment, Inventory, and Monitoring (AIM) program.  While the Terrestrial program aims to sample upland ecosystems, over 40,000 sites have been sampled, meaning even with minimal error, there are likely hundreds of sites that qualify as wetlands.  In this bookdown, I use a number of criteria to identify "wetland" sites in the Terrestrial AIM database. 
+
+```{r, eval=FALSE}
+bookdown::render_book()
+```
+
+```{r eval=FALSE}
+bookdown::serve_book()
+```
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

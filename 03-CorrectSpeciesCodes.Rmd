@@ -1,0 +1,164 @@
+# Correct Species Codes
+
+```{include=FALSE}
+library(tidyverse)
+library(tidyr)
+library(readr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Load the rest of the data
+
+#### LPI data (dups removed)
+
+```{r}
+lpi_tall2<- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/lpi_tall.DupsRemoved.csv")
+  
+```
+
+
+#### State Species List 
+This is the data that has the "correct" codes to replace incorrect ones. 
+
+```{r}
+StateSpecies<-read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/ExportedTerrestrial_Data/tblStateSpecies.csv") %>% 
+  select(SpeciesCode, 
+         ScientificName, 
+         UpdatedSpeciesCode, 
+         SpeciesState)
+
+#change some of the incorrectly formatted data
+
+StateSpecies["SpeciesCode"][StateSpecies["SpeciesCode"] == "7-Feb"] <- "FEBR7"
+
+StateSpecies["SpeciesCode"][StateSpecies["SpeciesCode"] == "2-Feb"] <- "FEBR2"
+
+StateSpecies["SpeciesCode"][StateSpecies["SpeciesCode"] == "2-Mar"] <- "MARCH2"
+
+```
+
+#### Wetland AIM Master Species List
+
+```{r}
+WetAIMmasterlist <- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetIndicators/WetlandAIM_MasterSpeciesList.csv")%>% 
+  select(Symbol, 
+         WMVC_WetStatus, 
+         AW_WetStatus, 
+         GP_WetStatus, 
+         Scientific.Name)
+```
+
+
+#### USDA plant list
+
+```{r}
+USDAlist <- read.csv("/Users/elinbinck/Documents/Grad_School/Thesis/R_project/Thesis_Research/data/WetIndicators/NationalPlantList.csv")
+
+USDAlist["Symbol"][USDAlist["Symbol"] == "7-Feb"] <- "FEBR7"
+
+USDAlist["Symbol"][USDAlist["Symbol"] == "5-Feb"] <- "FEBR5"
+
+USDAlist["Symbol"][USDAlist["Symbol"] == "2-Feb"] <- "FEBR2"
+
+USDAlist["Symbol"][USDAlist["Symbol"] == "2-Mar"] <- "MARCH2"
+
+USDAlist["Symbol"][USDAlist["Symbol"] == "Dec-70"] <- "DECE70"
+
+USDAlist["Symbol"][USDAlist["Symbol"] == "5-Jun"] <- "JUNE5"
+
+USDAlist["Symbol"][USDAlist["Symbol"] == "2-Nov"] <- "NOVE2"
+```
+
+## Join lpi_tall2 with other species lists
+
+### Join with USDA plant list
+
+
+```{r}
+
+#First, create a new column with EITHER the Symbol or the Synonym to prevent duplication when joining 
+
+USDAlist_oneCode<- USDAlist %>% 
+  mutate(SpeciesCode = 
+           if_else(Synonym.Symbol == "",Symbol, Synonym.Symbol)) %>% 
+  select(-Synonym.Symbol)
+
+lpi_USDA <- lpi_tall2 %>% 
+  left_join(USDAlist_oneCode, by = "SpeciesCode") 
+  
+```
+
+### Join with StateSpecies
+
+#### Prep StateSpecies to join
+
+Here I need to remove all duplicate combinations of state and species code.  To do so, I used anti join to find all of the records that are redundant because they match up with codes from the USDA list.  This also conveniently removed all duplicates, so when I join with the lpi data, this should give me a species name and possibly an "updated code" for any listings that did not already match with the USDA list. 
+
+```{r}
+#Investigate how many of the codes from the StateSpecies list show up in the USDA list w/ synonyms, and how many don't
+
+USDA_StateSpecies <- USDAlist_oneCode %>% 
+  inner_join(StateSpecies, by = "SpeciesCode")
+
+#there are only 2,500ish records that don't match.  Let's look at those:
+
+antiUSDA_StateSpecies <-StateSpecies %>% 
+  anti_join(USDAlist_oneCode, by = "SpeciesCode")
+
+#It looks like there are no duplicates anymore also!  So now I will join this to the lpi data:
+
+unique(antiUSDA_StateSpecies$UpdatedSpeciesCode)
+
+```
+
+#### Join the data
+
+```{r}
+
+#Join the lpi data that was joined with the USDA codes with the state species codes that are not redundant with the usda list.  This automatically joins by SpeciesCode and SpeciesState
+#so, this should produce the same number of records as lpi_tall2/lpi_USDA  - and it does!
+#Add the column with the "correct code," so basically any codes that differ between the UpdatedSpeciesCode and SpeciesCode will be replaced with the UpdatedSpeciesCode value.
+
+lpi_USDA_StateSpecies<-lpi_USDA %>% 
+  left_join(antiUSDA_StateSpecies) %>% 
+  mutate(CorrectSpeciesCode =
+           if_else(UpdatedSpeciesCode == "", SpeciesCode, UpdatedSpeciesCode, missing = SpeciesCode))
+
+```
+
+### Join with USDA list again
+
+This time I will be joining by scientific name, to try to catch any records where codes were just not right for some reason, but scientific names were.
+
+```{r}
+#I shouldn't need to do this with USDAlist_oneCode, since the Wetland AIM master list matched up 100% with the main symbol column, so that should be sufficient to get me what I want in terms of final match with the WetAIM master list. 
+
+USDAlist2<- USDAlist %>% 
+  rename("Symbol2" = "Symbol",
+         "Sci.Name"="Scientific.Name.with.Author") %>% 
+  select(-"Common.Name", 
+         - "Family", 
+         - "Synonym.Symbol")
+
+
+#Now, join the USDA list again, joining with its scientific name column (Sci.Name) to the ScientificName column that was attached from the StateSpecies list
+
+lpi_USDA2_StateSpecies<- lpi_USDA_StateSpecies %>% 
+  left_join(USDAlist2, by = c("ScientificName" = "Sci.Name")) %>% 
+  mutate(CorrectSpeciesCode2 = 
+           if_else(!is.na(Symbol2), Symbol2, CorrectSpeciesCode)) %>% 
+  select(-Symbol2, 
+         -Symbol,
+         -CorrectSpeciesCode,
+         -UpdatedSpeciesCode,
+         -ScientificName)
+  
+#No duplicates, which is a great sign!  
+
+#this adds a correct symbol column (Symbol2) directly from the USDA list that should match up to the Wetland Master list.  This actually looks like it just replaces unkown codes that were assigned a family with just the family code, so I probably didnt need to do this.  But, I don't think it hurts to have done it. 
+
+rm(list=ls())
+```
+
